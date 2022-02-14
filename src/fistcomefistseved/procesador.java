@@ -25,6 +25,18 @@ public class procesador extends Thread{
         this.tiempo_ejecucion = 0;
         this.libre = true;
     }
+
+    public boolean isLibre() {
+        return libre;
+    }
+    
+    
+
+    public float getTiempo_ejecucion() {
+        return tiempo_ejecucion;
+    }
+    
+    
     
     public void setProceso(proceso p){
         this.cola.add(p);

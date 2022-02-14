@@ -4,24 +4,20 @@
  */
 package fistcomefistseved;
 
+import javax.swing.JFrame;
+
 /**
  *
  * @author felipe
  */
 public class FistComeFistSeved {
-
+    private JFrame ventana;
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        procesador p1 = new procesador();
-        p1.setProceso(new proceso("A", 0, 8));
-        p1.setProceso(new proceso("B", 1, 4));
-        p1.setProceso(new proceso("C", 2, 9));
-        p1.start();
-        p1.setProceso(new proceso("proceso4", 0, 0));
-        p1.setProceso(new proceso("proceso5", 0, 0));
-        p1.setProceso(new proceso("proceso6", 0, 0));
+          FCFSJFrame ventana = new FCFSJFrame();
+          ventana.setVisible(true);
         
     }
     
