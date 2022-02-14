@@ -35,6 +35,18 @@ public class procesador extends Thread{
     public float getTiempo_ejecucion() {
         return tiempo_ejecucion;
     }
+
+    public Queue<proceso> getCola() {
+        return cola;
+    }
+
+    public Queue<proceso> getCola_bloqueo() {
+        return cola_bloqueo;
+    }
+
+    public Queue<proceso> getCola_terminado() {
+        return cola_terminado;
+    }
     
     
     

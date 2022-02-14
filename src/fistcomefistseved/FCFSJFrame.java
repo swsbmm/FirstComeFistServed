@@ -6,6 +6,7 @@ package fistcomefistseved;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 
 /**
  *
@@ -49,7 +50,7 @@ public class FCFSJFrame extends javax.swing.JFrame{
         jLabel5 = new javax.swing.JLabel();
         jLabelTiempoEjecucion = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTableCola = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -155,9 +156,9 @@ public class FCFSJFrame extends javax.swing.JFrame{
                 .addContainerGap())
         );
 
-        jTable1.setBackground(new java.awt.Color(145, 48, 48));
-        jTable1.setBorder(new javax.swing.border.MatteBorder(null));
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTableCola.setBackground(new java.awt.Color(145, 48, 48));
+        jTableCola.setBorder(new javax.swing.border.MatteBorder(null));
+        jTableCola.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -168,7 +169,7 @@ public class FCFSJFrame extends javax.swing.JFrame{
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(jTableCola);
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -280,6 +281,10 @@ public class FCFSJFrame extends javax.swing.JFrame{
         return jPanelSemasforo;
     }
 
+    public JTable getjTableCola() {
+        return jTableCola;
+    }
+
     
    
     
@@ -299,10 +304,10 @@ public class FCFSJFrame extends javax.swing.JFrame{
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
     private javax.swing.JTable jTable4;
+    private javax.swing.JTable jTableCola;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
