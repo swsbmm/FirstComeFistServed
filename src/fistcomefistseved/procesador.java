@@ -31,7 +31,6 @@ public class procesador extends Thread{
     }
     
     
-
     public float getTiempo_ejecucion() {
         return tiempo_ejecucion;
     }
@@ -64,16 +63,16 @@ public class procesador extends Thread{
     public void run(){
         while(true){
             
-            recorrerCola(cola_terminado);
-            System.out.println("");
-            System.out.println("");
-            System.out.println("");
-            System.out.println("");
-            System.out.println(this.tiempo_ejecucion);
-            System.out.println("");
-            System.out.println("");
-            System.out.println("");
-            
+//            recorrerCola(cola_terminado);
+//            System.out.println("");
+//            System.out.println("");
+//            System.out.println("");
+//            System.out.println("");
+//            System.out.println(this.tiempo_ejecucion);
+//            System.out.println("");
+//            System.out.println("");
+//            System.out.println("");
+//            
             if(cola.peek()!=null){
                 //asignando al proceso el tiempo que lleva ejecutandose
                 if(cola.peek().getTiempo_ejecucion() == 0){

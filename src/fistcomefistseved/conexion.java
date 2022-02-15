@@ -15,69 +15,163 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author felipe
  */
-public class conexion extends Thread{
+public class conexion extends Thread {
+
     private FCFSJFrame ventana;
     private procesador p;
-    DefaultTableModel modeloCola;
-    public conexion(FCFSJFrame ventana, procesador p){
+
+    public conexion(FCFSJFrame ventana, procesador p) {
         this.ventana = ventana;
         this.p = p;
         this.start();
-        procesosEnColaTable();
     }
-    
-    
-    private void procesosEnColaTable(){
-        ArrayList<Object> titulo = new ArrayList<Object>();
-        titulo.add("Nombre");
-        titulo.add("Tiempo de llegada");
-        titulo.add("Rafaga");
-        for(Object col: titulo){
-            modeloCola.addColumn(col);
+
+    private void procesosEnColaTable(DefaultTableModel modelo) {
+        try {
+            ArrayList<Object> titulo = new ArrayList<Object>();
+            titulo.add("Nombre");
+            titulo.add("Tiempo de llegada");
+            titulo.add("Rafaga");
+            for (Object col : titulo) {
+                modelo.addColumn(col);
+            }
+        } catch (Exception e) {
         }
-        ventana.getjTableCola().setModel(modeloCola);
+
     }
-    
-    private void tablaCola(DefaultTableModel modeloCola){
-        ArrayList<Object[]> datos = new ArrayList<Object[]>();
-        for(proceso p: p.getCola()){
-            datos.add(new Object[]{String.valueOf(p.getNombre()),String.valueOf(p.getTiempo_llegada()),String.valueOf(p.getTiempo_ejecucion())});
+
+    private void tablaCola() {
+        try {
+            ArrayList<Object[]> datos = new ArrayList<Object[]>();
+            DefaultTableModel modelo_final = new DefaultTableModel();
+            procesosEnColaTable(modelo_final);
+            for (proceso p : p.getCola()) {
+                datos.add(new Object[]{String.valueOf(p.getNombre()), String.valueOf(p.getTiempo_llegada()), String.valueOf(p.getRafaga())});
+            }
+
+            for (Object[] dato : datos) {
+                modelo_final.addRow(dato);
+            }
+            ventana.getjTableCola().setModel(modelo_final);
+        } catch (Exception e) {
         }
-        
-        for(Object []dato: datos){
-            modeloCola.addRow(dato);
-        }
-        ventana.getjTableCola().setModel(modeloCola);
+
     }
-    
-    private Color colorSemasforo(){
-        if(p.isLibre()){
+
+    private void tituloColaTerminado(DefaultTableModel modelo) {
+        ArrayList<Object> titulo1 = new ArrayList<Object>();
+        titulo1.add("Nombre");
+        titulo1.add("Tiempo de llegada");
+        titulo1.add("Rafaga");
+        titulo1.add("Tiempo de comienzo");
+        titulo1.add("Tiempo final");
+        titulo1.add("Tiempo de retorno");
+        titulo1.add("Tiempo de espera");
+        for (Object col1 : titulo1) {
+            modelo.addColumn(col1);
+        }
+    }
+
+    private void tituloColaBloqueado(DefaultTableModel modelo) {
+        ArrayList<Object> titulo1 = new ArrayList<Object>();
+        titulo1.add("Nombre");
+        titulo1.add("Tiempo de llegada");
+        titulo1.add("Rafaga");
+        titulo1.add("Tiempo de comienzo");
+        titulo1.add("Tiempo de bloqueo");
+        for (Object col1 : titulo1) {
+            modelo.addColumn(col1);
+        }
+    }
+
+    private void tablaColaBloqueado() {
+        try {
+            ArrayList<Object[]> datos = new ArrayList<Object[]>();
+            DefaultTableModel modelo_final1 = new DefaultTableModel();
+            tituloColaBloqueado(modelo_final1);
+            for (proceso p : p.getCola_bloqueo()) {
+                datos.add(new Object[]{
+                    String.valueOf(p.getNombre()),
+                    String.valueOf(p.getTiempo_llegada()),
+                    String.valueOf(p.getRafaga()),
+                    String.valueOf(p.getTiempo_comienzo()),
+                    String.valueOf(p.getTiempo_final()),
+                    String.valueOf(p.getTiempo_retorno()),
+                    String.valueOf(p.getTiempo_espera())});
+            }
+
+            for (Object[] dato : datos) {
+                modelo_final1.addRow(dato);
+            }
+            ventana.getjTableBloqueo().setModel(modelo_final1);
+        } catch (Exception e) {
+        }
+
+    }
+
+    private void tablaColaTerminado() {
+        try {
+            ArrayList<Object[]> datos = new ArrayList<Object[]>();
+            DefaultTableModel modelo_final1 = new DefaultTableModel();
+            tituloColaTerminado(modelo_final1);
+            for (proceso p : p.getCola_terminado()) {
+                datos.add(new Object[]{
+                    String.valueOf(p.getNombre()),
+                    String.valueOf(p.getTiempo_llegada()),
+                    String.valueOf(p.getRafaga()),
+                    String.valueOf(p.getTiempo_comienzo()),
+                    String.valueOf(p.getTiempo_final()),
+                    String.valueOf(p.getTiempo_retorno()),
+                    String.valueOf(p.getTiempo_espera())});
+            }
+
+            for (Object[] dato : datos) {
+                modelo_final1.addRow(dato);
+            }
+            ventana.getjTableFinalizados().setModel(modelo_final1);
+        } catch (Exception e) {
+        }
+
+    }
+
+    private Color colorSemasforo() {
+        if (p.isLibre()) {
             return Color.green;
-        }else{
+        } else {
             return Color.red;
         }
     }
-    
+
     @Override
-    public void run(){
-        while(ventana.isEnabled()){
-            
-            //TIEMPO DE EJECUCION
-            ventana.getjLabelTiempoEjecucion().setText(String.valueOf(p.getTiempo_ejecucion()));
-            
-            //SEMASFORO
-            ventana.getjPanelSemasforo().setBackground(colorSemasforo());
-            
-            //tabla cola
-            tablaCola();
-            
-            //VELOCIDAD DE RENDERISADO
+    public void run() {
+        while (ventana.isEnabled()) {
+
             try {
-                this.sleep(60);
+
+                //TIEMPO DE EJECUCION
+                ventana.getjLabelTiempoEjecucion().setText(String.valueOf(p.getTiempo_ejecucion()));
+
+                //SEMASFORO
+                ventana.getjPanelSemasforo().setBackground(colorSemasforo());
+
+                tablaColaBloqueado();
+
+                this.sleep(30);
+
+                //tabla cola
+                tablaCola();
+
+                this.sleep(30);
+                
+                tablaColaTerminado();
+                
+                 this.sleep(30);
+
             } catch (InterruptedException ex) {
                 Logger.getLogger(conexion.class.getName()).log(Level.SEVERE, null, ex);
             }
+
         }
     }
-    
+
 }

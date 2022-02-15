@@ -12,6 +12,7 @@ public class proceso {
     private String nombre;
     private float tiempo_llegada;
     private float rafaga;
+    //tiempo de ejecucion
     private float tiempo_ejecucion;
     private float tiempo_comienzo;
     private float tiempo_final;
@@ -34,11 +35,6 @@ public class proceso {
     }
     
     
-    
-    public void setDatos(float tiempo_retorno, float tiempo_espera){
-        this.tiempo_retorno = tiempo_retorno;
-        this.tiempo_espera = tiempo_espera;
-    }
 
     public String getNombre() {
         return nombre;
