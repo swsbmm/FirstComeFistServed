@@ -118,7 +118,7 @@ public class conexion extends Thread {
                 datos.add(new Object[]{
                     String.valueOf(p.getNombre()),
                     String.valueOf(p.getTiempo_llegada()),
-                    String.valueOf(p.getRafaga()),
+                    String.valueOf(p.getTiempo_ejecucion()),
                     String.valueOf(p.getTiempo_comienzo()),
                     String.valueOf(p.getTiempo_final()),
                     String.valueOf(p.getTiempo_retorno()),

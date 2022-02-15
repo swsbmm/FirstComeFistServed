@@ -63,7 +63,7 @@ public class FCFSJFrame extends javax.swing.JFrame{
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(254, 254, 254));
 
-        jPanel1.setBackground(new java.awt.Color(177, 45, 45));
+        jPanel1.setBackground(new java.awt.Color(91, 91, 91));
 
         jButton1.setText("Agregar proceso");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -157,8 +157,9 @@ public class FCFSJFrame extends javax.swing.JFrame{
                 .addContainerGap())
         );
 
-        jTableCola.setBackground(new java.awt.Color(145, 48, 48));
-        jTableCola.setBorder(new javax.swing.border.MatteBorder(null));
+        jTableCola.setBackground(new java.awt.Color(97, 97, 97));
+        jTableCola.setBorder(null);
+        jTableCola.setFont(new java.awt.Font("Noto Sans", 1, 18)); // NOI18N
         jTableCola.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
