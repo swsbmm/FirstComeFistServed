@@ -21,6 +21,7 @@ public class procesador extends Thread {
     private float tiempo_ejecucion;
     private boolean libre;
     private float tiempo_llegada_ultimo_proceso;
+    private boolean bloquearProceso;
 
     public procesador() {
         this.cola = new LinkedList();
@@ -29,31 +30,42 @@ public class procesador extends Thread {
         this.tiempo_ejecucion = 0;
         this.libre = true;
         this.tiempo_llegada_ultimo_proceso = 0;
+        this.bloquearProceso = false;
     }
 
     public boolean isLibre() {
         return libre;
     }
 
-    public void bloquear_proceso() {
+    public void setBloquearProceso(boolean bloquearProceso) {
+        this.bloquearProceso = bloquearProceso;
+    }
+
+    public void bloquear_p() {
         if (cola.peek() != null) {
             float numero = (int) (Math.random() * 10 + 1);
             this.cola.peek().setBloqueado(numero);
+            System.out.println("PROCESO BLOQUEADO --> " + cola.peek().getNombre());
             this.cola_bloqueo.add(this.cola.poll());
+            this.bloquearProceso = false;
         }
 
     }
-    
-    public void bloqueo(){
-        for(proceso p: this.cola_bloqueo){
-            if(p.getBloqueado() <= 0){
-                this.cola.add(p);
-                this.cola_bloqueo.remove(p);
-            }else{
-                p.setBloqueado(p.getBloqueado()-1);
+
+    public void bloqueo() {
+        if (this.cola_bloqueo != null) {
+            for (proceso p : this.cola_bloqueo) {
+                if (p.getBloqueado() <= 0) {
+                    this.cola.add(p);
+                    this.cola_bloqueo.remove(p);
+                } else {
+                    p.setBloqueado(p.getBloqueado() - 1);
+                    p.setTiempo_ejecucion(p.getTiempo_ejecucion() + 1);
+                }
+
             }
-            
         }
+
     }
 
     public float getTiempo_ejecucion() {
@@ -93,24 +105,28 @@ public class procesador extends Thread {
         }
     }
 
+    private void asignarTiemposAProceso(proceso p) {
+        //asignandole el tiempo final al proceso debido a que ya no tiene rafaga para seguir en ejecucion
+        p.setTiempo_final(p.getRafagaV() + p.getTiempo_comienzo() + p.getBloqueadoV());
+
+        //calculando y asignando al proceso el tiempo de retorno
+        p.setTiempo_retorno(p.getTiempo_final() - p.getTiempo_llegada());
+
+        //calculando y asignando al proceso el tiempo de espera
+        p.setTiempo_espera(p.getTiempo_retorno() - p.getRafagaV() - p.getBloqueadoV());
+
+    }
+
     @Override
     public void run() {
         while (true) {
-
+            if (bloquearProceso) {
+                bloquear_p();
+            }
             bloqueo();
-//            recorrerCola(cola_terminado);
-//            System.out.println("");
-//            System.out.println("");
-//            System.out.println("");
-//            System.out.println("");
             System.out.println(this.tiempo_ejecucion);
-//            System.out.println("");
-//            System.out.println("");
-//            System.out.println("");
 //            
-            if (cola.peek() != null || this.cola_bloqueo !=null) {
-
-                //agregando tiempo de ejecucion al proceso y durmiendo el hilo 1 segundo
+            if (cola.peek() != null) {
                 try {
 
                     //asignando al proceso el tiempo que lleva ejecutandose
@@ -122,42 +138,25 @@ public class procesador extends Thread {
                         this.sleep(1000);
                         this.tiempo_ejecucion = this.tiempo_ejecucion + 1;
                         this.cola.peek().setTiempo_ejecucion(this.cola.peek().getTiempo_ejecucion() + 1);
+                        //Restandole a la rafaga - 1 que es lo que se demora el hilo en volver a ejecutarse.
+                        cola.peek().setRafaga(cola.peek().getRafaga() - 1);
                         this.libre = false;
                     } else {
                         this.libre = true;
-                        //System.out.println("procesador libre ************************");
                         this.sleep(2000);
-                    }
-
-                    //Imprimiendo datos del proceso por consola
-                    //System.out.println("nombre: "+ cola.peek().getNombre()+ "Rafaga: "+cola.peek().getRafaga());
-                    //Restandole a la rafaga - 1 que es lo que se demora el hilo en volver a ejecutarse.
-                    if (cola.peek().getRafaga() >= 0) {
-                        cola.peek().setRafaga(cola.peek().getRafaga() - 1);
                     }
 
                     //Preguntandole al proceso si aun tiene ragafa, si no tiene entonces se calculan se pasa a la cola de terminado
                     if (cola.peek().getRafaga() <= 0) {
 
-                        //asignandole el tiempo final al proceso debido a que ya no tiene rafaga para seguir en ejecucion
-                        cola.peek().setTiempo_final(cola.peek().getTiempo_ejecucion() + cola.peek().getTiempo_comienzo());
-
-                        //calculando y asignando al proceso el tiempo de retorno
-                        cola.peek().setTiempo_retorno(cola.peek().getTiempo_final() - cola.peek().getTiempo_llegada());
-
-                        //calculando y asignando al proceso el tiempo de espera
-                        cola.peek().setTiempo_espera(cola.peek().getTiempo_retorno() - cola.peek().getTiempo_ejecucion());
-
+                        asignarTiemposAProceso(cola.peek());
                         //agregando a la cola de terminado el proceso que finalizo
                         this.cola_terminado.add(cola.poll());
 
                         this.libre = true;
-                        //System.out.println("procesador libre ************************");
-                        try {
-                            procesador.sleep(2000);
-                        } catch (InterruptedException ex) {
-                            //Logger.getLogger(procesador.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+
+                        procesador.sleep(2000);
+
                     }
 
                 } catch (InterruptedException ex) {
