@@ -61,11 +61,15 @@ public class procesador extends Thread {
 
     public boolean setBloquearProceso() {
         if (!this.cola.isEmpty()) {
-            this.cola.peek().setBloqueo(true);
-            float numRan = numeroRadom();
-            this.cola.peek().setTiempo_bloqueo(numRan);
-            this.cola.peek().setBloqueadoV(numRan);
-            return true;
+            if(this.cola.peek().getRafaga()>0){
+                this.cola.peek().setBloqueo(true);
+                float numRan = numeroRadom();
+                this.cola.peek().setTiempo_bloqueo(numRan);
+                this.cola.peek().setBloqueadoV(numRan);
+                return true;
+            }else{
+                return false;
+            }
         } else {
             return false;
         }
@@ -96,7 +100,7 @@ public class procesador extends Thread {
         p.setTiempo_retorno(p.getTiempo_final() - p.getTiempo_llegada());
 
         //calculando y asignando al proceso el tiempo de espera
-        p.setTiempo_espera(p.getTiempo_retorno() - p.getRafagaV() - p.getBloqueadoV());
+        p.setTiempo_espera(p.getTiempo_retorno() - p.getRafagaV());
 
     }
 
