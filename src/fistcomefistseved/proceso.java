@@ -20,16 +20,18 @@ public class proceso {
     private float tiempo_retorno;
     private float tiempo_espera;
     private float bloqueadoV;
-    private float bloqueado;
+    private float tiempo_bloqueo;
+    private boolean bloqueo;
     
     public proceso(String nombre, float tiempo_llegada, float rafaga){
         this.nombre = nombre;
         this.tiempo_llegada = tiempo_llegada;
         this.rafaga = rafaga;
         this.tiempo_ejecucion = 0;
-        this.bloqueado = 0;
+        this.tiempo_bloqueo = 0;
         this.bloqueadoV = 0;
         this.rafagaV = rafaga;
+        this.bloqueo = false;
     }
 
     public float getRafagaV() {
@@ -38,6 +40,10 @@ public class proceso {
 
     public float getBloqueadoV() {
         return bloqueadoV;
+    }
+
+    public void setBloqueadoV(float bloqueadoV) {
+        this.bloqueadoV = this.bloqueadoV+bloqueadoV;
     }
 
     
@@ -51,12 +57,29 @@ public class proceso {
     }
 
     public float getBloqueado() {
-        return bloqueado;
+        return tiempo_bloqueo;
     }
 
     public void setBloqueado(float bloqueado) {
-        this.bloqueado = bloqueado;
-        this.bloqueadoV = bloqueado;
+        this.tiempo_bloqueo = bloqueado;
+    }
+
+    public float getTiempo_bloqueo() {
+        return tiempo_bloqueo;
+    }
+
+    public void setTiempo_bloqueo(float tiempo_bloqueo) {
+        this.tiempo_bloqueo = tiempo_bloqueo;
+    }
+    
+    
+
+    public boolean isBloqueo() {
+        return bloqueo;
+    }
+
+    public void setBloqueo(boolean bloqueo) {
+        this.bloqueo = bloqueo;
     }
 
     

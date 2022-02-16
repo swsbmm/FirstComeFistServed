@@ -66,6 +66,7 @@ public class conexion extends Thread {
         titulo1.add("Tiempo final");
         titulo1.add("Tiempo de retorno");
         titulo1.add("Tiempo de espera");
+        titulo1.add("Tiempo bloqueado");
         for (Object col1 : titulo1) {
             modelo.addColumn(col1);
         }
@@ -119,7 +120,8 @@ public class conexion extends Thread {
                     String.valueOf(p.getTiempo_comienzo()),
                     String.valueOf(p.getTiempo_final()),
                     String.valueOf(p.getTiempo_retorno()),
-                    String.valueOf(p.getTiempo_espera())});
+                    String.valueOf(p.getTiempo_espera()),
+                    String.valueOf(p.getBloqueadoV())});
             }
 
             for (Object[] dato : datos) {

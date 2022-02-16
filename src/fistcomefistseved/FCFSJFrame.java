@@ -297,7 +297,7 @@ public class FCFSJFrame extends javax.swing.JFrame{
     }//GEN-LAST:event_JtextNombreActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        procesador.setBloquearProceso(true);
+        System.out.println(procesador.setBloquearProceso());
     }//GEN-LAST:event_jButton2ActionPerformed
 
     public void setjLabelTiempoEjecucion(JLabel jLabelTiempoEjecucion) {
