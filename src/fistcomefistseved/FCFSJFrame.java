@@ -5,6 +5,7 @@
 package fistcomefistseved;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
@@ -25,7 +26,9 @@ public class FCFSJFrame extends javax.swing.JFrame{
         procesador.setProceso(new proceso("B", 1, 4));
         procesador.setProceso(new proceso("C", 2, 9));
         conexionProcesadorVentana = new conexion(this, procesador);
+        conexionProcesadorVentana.start();
         procesador.start();
+        
     }
 
     /**
@@ -59,6 +62,7 @@ public class FCFSJFrame extends javax.swing.JFrame{
         jLabel6 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(254, 254, 254));
@@ -139,26 +143,25 @@ public class FCFSJFrame extends javax.swing.JFrame{
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2)
                             .addComponent(jLabel3)
                             .addComponent(jLabel4)
                             .addComponent(jLabel5))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(8, 8, 8)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(JtextNombre)
                             .addComponent(JtextRafaga)
                             .addComponent(JtextTLlegada)
                             .addComponent(jPanelSemasforo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabelTiempoEjecucion, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)))
-                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabelTiempoEjecucion, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE))))
                 .addContainerGap())
         );
 
         jTableCola.setBackground(new java.awt.Color(97, 97, 97));
-        jTableCola.setBorder(null);
         jTableCola.setFont(new java.awt.Font("Noto Sans", 1, 18)); // NOI18N
         jTableCola.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -209,7 +212,7 @@ public class FCFSJFrame extends javax.swing.JFrame{
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 102, Short.MAX_VALUE)
+            .addGap(0, 100, Short.MAX_VALUE)
         );
 
         jLabel6.setText("COLA:");
@@ -217,6 +220,14 @@ public class FCFSJFrame extends javax.swing.JFrame{
         jLabel8.setText("FINALIZADOS:");
 
         jLabel9.setText("BLOQUEADOS:");
+
+        jButton2.setBackground(new java.awt.Color(243, 24, 24));
+        jButton2.setText("Bloquear proceso");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -236,9 +247,12 @@ public class FCFSJFrame extends javax.swing.JFrame{
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel8)
-                            .addComponent(jLabel9)
-                            .addComponent(jLabel6))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addComponent(jLabel9))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -246,8 +260,10 @@ public class FCFSJFrame extends javax.swing.JFrame{
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
-                .addComponent(jLabel6)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel6)
+                    .addComponent(jButton2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -267,16 +283,22 @@ public class FCFSJFrame extends javax.swing.JFrame{
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        procesador.setProceso(new proceso(
+        if(!procesador.setProceso(new proceso(
         String.valueOf(this.JtextNombre.getText()),
                 Float.parseFloat(this.JtextTLlegada.getText()),
                 Float.parseFloat(this.JtextRafaga.getText())
-        ));
+        ))){
+            JOptionPane.showMessageDialog(this, "Error en tiempo de llegada, tiene que ser mayor o igual a: "+ procesador.getTiempo_llegada_ultimo_proceso());
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void JtextNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JtextNombreActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_JtextNombreActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        procesador.bloquear_proceso();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     public void setjLabelTiempoEjecucion(JLabel jLabelTiempoEjecucion) {
         this.jLabelTiempoEjecucion = jLabelTiempoEjecucion;
@@ -312,6 +334,7 @@ public class FCFSJFrame extends javax.swing.JFrame{
     private javax.swing.JTextField JtextRafaga;
     private javax.swing.JTextField JtextTLlegada;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -331,4 +354,8 @@ public class FCFSJFrame extends javax.swing.JFrame{
     private javax.swing.JTable jTableCola;
     private javax.swing.JTable jTableFinalizados;
     // End of variables declaration//GEN-END:variables
+
+    private void sleep(int i) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

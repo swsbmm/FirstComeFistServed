@@ -18,12 +18,14 @@ public class proceso {
     private float tiempo_final;
     private float tiempo_retorno;
     private float tiempo_espera;
+    private float bloqueado;
     
     public proceso(String nombre, float tiempo_llegada, float rafaga){
         this.nombre = nombre;
         this.tiempo_llegada = tiempo_llegada;
         this.rafaga = rafaga;
         this.tiempo_ejecucion = 0;
+        this.bloqueado = 0;
     }
 
     public float getTiempo_ejecucion() {
@@ -33,6 +35,15 @@ public class proceso {
     public void setTiempo_ejecucion(float tiempo_ejecucion) {
         this.tiempo_ejecucion = tiempo_ejecucion;
     }
+
+    public float getBloqueado() {
+        return bloqueado;
+    }
+
+    public void setBloqueado(float bloqueado) {
+        this.bloqueado = bloqueado;
+    }
+
     
     
 

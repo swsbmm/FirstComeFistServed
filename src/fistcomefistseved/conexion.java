@@ -23,7 +23,6 @@ public class conexion extends Thread {
     public conexion(FCFSJFrame ventana, procesador p) {
         this.ventana = ventana;
         this.p = p;
-        this.start();
     }
 
     private void procesosEnColaTable(DefaultTableModel modelo) {
@@ -95,9 +94,7 @@ public class conexion extends Thread {
                     String.valueOf(p.getTiempo_llegada()),
                     String.valueOf(p.getRafaga()),
                     String.valueOf(p.getTiempo_comienzo()),
-                    String.valueOf(p.getTiempo_final()),
-                    String.valueOf(p.getTiempo_retorno()),
-                    String.valueOf(p.getTiempo_espera())});
+                    String.valueOf(p.getBloqueado())});
             }
 
             for (Object[] dato : datos) {
@@ -133,6 +130,8 @@ public class conexion extends Thread {
         }
 
     }
+    
+    
 
     private Color colorSemasforo() {
         if (p.isLibre()) {
@@ -141,13 +140,14 @@ public class conexion extends Thread {
             return Color.red;
         }
     }
+    
 
     @Override
     public void run() {
         while (ventana.isEnabled()) {
 
             try {
-
+                this.sleep(120);
                 //TIEMPO DE EJECUCION
                 ventana.getjLabelTiempoEjecucion().setText(String.valueOf(p.getTiempo_ejecucion()));
 
@@ -156,16 +156,15 @@ public class conexion extends Thread {
 
                 tablaColaBloqueado();
 
-                this.sleep(30);
+                this.sleep(120);
 
                 //tabla cola
                 tablaCola();
 
-                this.sleep(30);
+                this.sleep(120);
                 
                 tablaColaTerminado();
                 
-                 this.sleep(30);
 
             } catch (InterruptedException ex) {
                 Logger.getLogger(conexion.class.getName()).log(Level.SEVERE, null, ex);

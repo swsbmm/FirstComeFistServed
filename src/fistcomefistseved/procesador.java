@@ -3,34 +3,59 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package fistcomefistseved;
+
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 /**
  *
  * @author felipe
  */
-public class procesador extends Thread{
+public class procesador extends Thread {
+
     private Queue<proceso> cola;
     private Queue<proceso> cola_bloqueo;
     private Queue<proceso> cola_terminado;
     private float tiempo_ejecucion;
     private boolean libre;
-    
-    public procesador(){
+    private float tiempo_llegada_ultimo_proceso;
+
+    public procesador() {
         this.cola = new LinkedList();
         this.cola_bloqueo = new LinkedList();
         this.cola_terminado = new LinkedList();
         this.tiempo_ejecucion = 0;
         this.libre = true;
+        this.tiempo_llegada_ultimo_proceso = 0;
     }
 
     public boolean isLibre() {
         return libre;
     }
+
+    public void bloquear_proceso() {
+        if (cola.peek() != null) {
+            float numero = (int) (Math.random() * 10 + 1);
+            this.cola.peek().setBloqueado(numero);
+            this.cola_bloqueo.add(this.cola.poll());
+        }
+
+    }
     
-    
+    public void bloqueo(){
+        for(proceso p: this.cola_bloqueo){
+            if(p.getBloqueado() <= 0){
+                this.cola.add(p);
+                this.cola_bloqueo.remove(p);
+            }else{
+                p.setBloqueado(p.getBloqueado()-1);
+            }
+            
+        }
+    }
+
     public float getTiempo_ejecucion() {
         return tiempo_ejecucion;
     }
@@ -46,94 +71,100 @@ public class procesador extends Thread{
     public Queue<proceso> getCola_terminado() {
         return cola_terminado;
     }
-    
-    
-    
-    public void setProceso(proceso p){
-        this.cola.add(p);
+
+    public float getTiempo_llegada_ultimo_proceso() {
+        return tiempo_llegada_ultimo_proceso;
     }
-    
-    public void recorrerCola(Queue<proceso> cola)  {
-      for(proceso v: cola){
-        System.out.println(" nombre: "+v.getNombre()+ " t_llegada: "+v.getTiempo_llegada()+ " rafaga: "+v.getTiempo_ejecucion()+ " t_comienzo "+v.getTiempo_comienzo()+ " t_final "+v.getTiempo_final()+ " t_retorno "+v.getTiempo_retorno()+ " t_espera "+v.getTiempo_espera());
-      }
+
+    public boolean setProceso(proceso p) {
+        if (p.getTiempo_llegada() >= this.tiempo_llegada_ultimo_proceso) {
+            this.tiempo_llegada_ultimo_proceso = p.getTiempo_llegada();
+            this.cola.add(p);
+            return true;
+        } else {
+            return false;
+        }
+
     }
-    
+
+    public void recorrerCola(Queue<proceso> cola) {
+        for (proceso v : cola) {
+            System.out.println(" nombre: " + v.getNombre() + " t_llegada: " + v.getTiempo_llegada() + " rafaga: " + v.getTiempo_ejecucion() + " t_comienzo " + v.getTiempo_comienzo() + " t_final " + v.getTiempo_final() + " t_retorno " + v.getTiempo_retorno() + " t_espera " + v.getTiempo_espera());
+        }
+    }
+
     @Override
-    public void run(){
-        while(true){
-            
+    public void run() {
+        while (true) {
+
+            bloqueo();
 //            recorrerCola(cola_terminado);
 //            System.out.println("");
 //            System.out.println("");
 //            System.out.println("");
 //            System.out.println("");
-//            System.out.println(this.tiempo_ejecucion);
+            System.out.println(this.tiempo_ejecucion);
 //            System.out.println("");
 //            System.out.println("");
 //            System.out.println("");
 //            
-            if(cola.peek()!=null){
-                //asignando al proceso el tiempo que lleva ejecutandose
-                if(cola.peek().getTiempo_ejecucion() == 0){
-                    cola.peek().setTiempo_comienzo(this.tiempo_ejecucion);
-                }
-                
-                
+            if (cola.peek() != null || this.cola_bloqueo !=null) {
 
                 //agregando tiempo de ejecucion al proceso y durmiendo el hilo 1 segundo
                 try {
-                    if(cola.peek().getRafaga()>0){
+
+                    //asignando al proceso el tiempo que lleva ejecutandose
+                    if (cola.peek().getTiempo_ejecucion() == 0) {
+                        cola.peek().setTiempo_comienzo(this.tiempo_ejecucion);
+                    }
+
+                    if (cola.peek().getRafaga() > 0) {
                         this.sleep(1000);
-                        this.tiempo_ejecucion = this.tiempo_ejecucion+1;
-                        this.cola.peek().setTiempo_ejecucion(this.cola.peek().getTiempo_ejecucion()+1);
+                        this.tiempo_ejecucion = this.tiempo_ejecucion + 1;
+                        this.cola.peek().setTiempo_ejecucion(this.cola.peek().getTiempo_ejecucion() + 1);
                         this.libre = false;
-                    }else{
+                    } else {
                         this.libre = true;
                         //System.out.println("procesador libre ************************");
                         this.sleep(2000);
                     }
+
+                    //Imprimiendo datos del proceso por consola
+                    //System.out.println("nombre: "+ cola.peek().getNombre()+ "Rafaga: "+cola.peek().getRafaga());
+                    //Restandole a la rafaga - 1 que es lo que se demora el hilo en volver a ejecutarse.
+                    if (cola.peek().getRafaga() >= 0) {
+                        cola.peek().setRafaga(cola.peek().getRafaga() - 1);
+                    }
+
+                    //Preguntandole al proceso si aun tiene ragafa, si no tiene entonces se calculan se pasa a la cola de terminado
+                    if (cola.peek().getRafaga() <= 0) {
+
+                        //asignandole el tiempo final al proceso debido a que ya no tiene rafaga para seguir en ejecucion
+                        cola.peek().setTiempo_final(cola.peek().getTiempo_ejecucion() + cola.peek().getTiempo_comienzo());
+
+                        //calculando y asignando al proceso el tiempo de retorno
+                        cola.peek().setTiempo_retorno(cola.peek().getTiempo_final() - cola.peek().getTiempo_llegada());
+
+                        //calculando y asignando al proceso el tiempo de espera
+                        cola.peek().setTiempo_espera(cola.peek().getTiempo_retorno() - cola.peek().getTiempo_ejecucion());
+
+                        //agregando a la cola de terminado el proceso que finalizo
+                        this.cola_terminado.add(cola.poll());
+
+                        this.libre = true;
+                        //System.out.println("procesador libre ************************");
+                        try {
+                            procesador.sleep(2000);
+                        } catch (InterruptedException ex) {
+                            //Logger.getLogger(procesador.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(procesador.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
-                //Imprimiendo datos del proceso por consola
-                //System.out.println("nombre: "+ cola.peek().getNombre()+ "Rafaga: "+cola.peek().getRafaga());
-                
-                
-                //Restandole a la rafaga - 1 que es lo que se demora el hilo en volver a ejecutarse.
-                if(cola.peek().getRafaga() >= 0 ){
-                    cola.peek().setRafaga(cola.peek().getRafaga()-1);
-                }
-                
-                //Preguntandole al proceso si aun tiene ragafa, si no tiene entonces se calculan se pasa a la cola de terminado
-                if(cola.peek().getRafaga()<= 0){
-                    
-                    //asignandole el tiempo final al proceso debido a que ya no tiene rafaga para seguir en ejecucion
-                    cola.peek().setTiempo_final(cola.peek().getTiempo_ejecucion()+cola.peek().getTiempo_comienzo());
-                    
-                    //calculando y asignando al proceso el tiempo de retorno
-                    cola.peek().setTiempo_retorno(cola.peek().getTiempo_final()-cola.peek().getTiempo_llegada());
-                    
-                    //calculando y asignando al proceso el tiempo de espera
-                    cola.peek().setTiempo_espera(cola.peek().getTiempo_retorno()-cola.peek().getTiempo_ejecucion());
-                    
-                    //agregando a la cola de terminado el proceso que finalizo
-                    this.cola_terminado.add(cola.poll());
-                    
-                    
-                    this.libre = true;
-                    //System.out.println("procesador libre ************************");
-                    try {
-                        this.sleep(2000);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(procesador.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-                
-                
             }
         }
     }
-    
+
 }
