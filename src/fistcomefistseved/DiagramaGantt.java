@@ -47,7 +47,6 @@ public class DiagramaGantt extends Canvas {
         pincel.draw(new Line2D.Double(inicio_x, altura_linea, this.getWidth() - 5, altura_linea));
         int numero = 0;
         for (double i = inicio_x; i < this.getWidth(); i = i + unidad) {
-            System.out.println(this.getWidth() + "  " + i);
             pincel.draw(new Line2D.Double(i, altura_linea - 10, i, altura_linea + 10));
             pincel.drawString("" + numero, (int) i - 4, altura_numeros);
             numero++;

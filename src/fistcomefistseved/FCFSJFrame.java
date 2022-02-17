@@ -40,7 +40,7 @@ public class FCFSJFrame extends javax.swing.JFrame implements Runnable{
         diagrama = new DiagramaGantt(this.procesador);
         diagrama.setBounds(0,0,canvasPanel.getWidth(),canvasPanel.getWidth());
         this.canvasPanel.add(diagrama);
-        this.canvasPanel.setPreferredSize(new Dimension(1000,1000));
+        //this.canvasPanel.setPreferredSize(new Dimension(1000,1000));
     }
     
     public void run(){
