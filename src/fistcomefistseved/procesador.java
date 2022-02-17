@@ -4,6 +4,7 @@
  */
 package fistcomefistseved;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.logging.Level;
@@ -18,6 +19,7 @@ public class procesador extends Thread {
     private Queue<proceso> cola;
     private Queue<proceso> cola_bloqueo;
     private Queue<proceso> cola_terminado;
+    private ArrayList<proceso> procesos;
     private float tiempo_ejecucion;
     private boolean libre;
     private float tiempo_llegada_ultimo_proceso;
@@ -29,6 +31,7 @@ public class procesador extends Thread {
         this.tiempo_ejecucion = 0;
         this.libre = true;
         this.tiempo_llegada_ultimo_proceso = 0;
+        this.procesos = new ArrayList<proceso>();
     }
 
     public boolean isLibre() {
@@ -79,6 +82,7 @@ public class procesador extends Thread {
         if (p.getTiempo_llegada() >= this.tiempo_llegada_ultimo_proceso) {
             this.tiempo_llegada_ultimo_proceso = p.getTiempo_llegada();
             this.cola.add(p);
+            this.procesos.add(p);
             return true;
         } else {
             return false;
@@ -88,7 +92,7 @@ public class procesador extends Thread {
 
     public void recorrerCola(Queue<proceso> cola) {
         for (proceso v : cola) {
-            System.out.println(" nombre: " + v.getNombre() + " t_llegada: " + v.getTiempo_llegada() + " rafaga: " + v.getTiempo_ejecucion() + " t_comienzo " + v.getTiempo_comienzo() + " t_final " + v.getTiempo_final() + " t_retorno " + v.getTiempo_retorno() + " t_espera " + v.getTiempo_espera());
+            //System.out.println(" nombre: " + v.getNombre() + " t_llegada: " + v.getTiempo_llegada() + " rafaga: " + v.getTiempo_ejecucion() + " t_comienzo " + v.getTiempo_comienzo() + " t_final " + v.getTiempo_final() + " t_retorno " + v.getTiempo_retorno() + " t_espera " + v.getTiempo_espera());
         }
     }
 
@@ -108,7 +112,7 @@ public class procesador extends Thread {
 
     private void set_tiempo_comienzo() {
         //asignando al proceso el tiempo que lleva ejecutandose
-        System.out.println("PROCESO--> "+ cola.peek().getNombre()+ "TIEMPO DE EJECUCION DEL PROECSO--> " +cola.peek().getTiempo_ejecucion());
+        //System.out.println("PROCESO--> "+ cola.peek().getNombre()+ "TIEMPO DE EJECUCION DEL PROECSO--> " +cola.peek().getTiempo_ejecucion());
         if (cola.peek().getTiempo_ejecucion() == 0) {
             cola.peek().setTiempo_comienzo(this.tiempo_ejecucion);
         }
@@ -126,8 +130,7 @@ public class procesador extends Thread {
             for (proceso p : this.cola_bloqueo) {
                 if (p.getTiempo_bloqueo() == 0) {
                     p.setBloqueo(false);
-                    this.cola.add(p);
-                    this.cola_bloqueo.poll();
+                    this.cola.add(this.cola_bloqueo.poll());
                 }
                 if (p.getTiempo_bloqueo() > 0) {
                     p.setTiempo_bloqueo(p.getTiempo_bloqueo() - 1);

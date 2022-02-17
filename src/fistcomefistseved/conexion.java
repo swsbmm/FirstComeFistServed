@@ -5,6 +5,7 @@
 package fistcomefistseved;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,7 +16,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author felipe
  */
-public class conexion extends Thread {
+public class conexion extends Thread{
 
     private FCFSJFrame ventana;
     private procesador p;
@@ -143,12 +144,8 @@ public class conexion extends Thread {
         }
     }
     
-
-    @Override
-    public void run() {
-        while (ventana.isEnabled()) {
-
-            try {
+    public void paint(Graphics g){
+        try {
                 this.sleep(120);
                 //TIEMPO DE EJECUCION
                 ventana.getjLabelTiempoEjecucion().setText(String.valueOf(p.getTiempo_ejecucion()));
@@ -171,7 +168,13 @@ public class conexion extends Thread {
             } catch (InterruptedException ex) {
                 Logger.getLogger(conexion.class.getName()).log(Level.SEVERE, null, ex);
             }
+    }
 
+    @Override
+    public void run() {
+        while (ventana.isEnabled()) {
+
+            paint(ventana.getGraphics());
         }
     }
 

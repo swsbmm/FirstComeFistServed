@@ -4,6 +4,7 @@
  */
 package fistcomefistseved;
 
+import java.awt.Dimension;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -13,9 +14,11 @@ import javax.swing.JTable;
  *
  * @author felipe
  */
-public class FCFSJFrame extends javax.swing.JFrame{
+public class FCFSJFrame extends javax.swing.JFrame implements Runnable{
     private procesador procesador;
     private conexion conexionProcesadorVentana;
+    private Thread hilo_dibujo;
+    DiagramaGantt diagrama;
     /**
      * Creates new form FCFSJFrame
      */
@@ -26,11 +29,30 @@ public class FCFSJFrame extends javax.swing.JFrame{
         procesador.setProceso(new proceso("B", 1, 4));
         procesador.setProceso(new proceso("C", 2, 9));
         conexionProcesadorVentana = new conexion(this, procesador);
+        hilo_dibujo = new Thread(this);
         conexionProcesadorVentana.start();
         procesador.start();
+        hilo_dibujo.start();
+        diagrama();
         
     }
-
+    private void diagrama(){
+        diagrama = new DiagramaGantt(this.procesador);
+        diagrama.setBounds(0,0,canvasPanel.getWidth(),canvasPanel.getWidth());
+        this.canvasPanel.add(diagrama);
+        this.canvasPanel.setPreferredSize(new Dimension(1000,1000));
+    }
+    
+    public void run(){
+        while(true){
+            try {
+                diagrama.repaint();
+                this.hilo_dibujo.sleep(60);
+            } catch (Exception e) {
+            }
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -58,7 +80,7 @@ public class FCFSJFrame extends javax.swing.JFrame{
         jTableFinalizados = new javax.swing.JTable();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTableBloqueo = new javax.swing.JTable();
-        jPanel2 = new javax.swing.JPanel();
+        canvasPanel = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
@@ -202,17 +224,22 @@ public class FCFSJFrame extends javax.swing.JFrame{
         ));
         jScrollPane4.setViewportView(jTableBloqueo);
 
-        jPanel2.setBackground(new java.awt.Color(133, 211, 81));
+        canvasPanel.setBackground(new java.awt.Color(133, 211, 81));
+        canvasPanel.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                canvasPanelComponentResized(evt);
+            }
+        });
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout canvasPanelLayout = new javax.swing.GroupLayout(canvasPanel);
+        canvasPanel.setLayout(canvasPanelLayout);
+        canvasPanelLayout.setHorizontalGroup(
+            canvasPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 242, Short.MAX_VALUE)
+        canvasPanelLayout.setVerticalGroup(
+            canvasPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 230, Short.MAX_VALUE)
         );
 
         jLabel6.setText("COLA:");
@@ -235,9 +262,7 @@ public class FCFSJFrame extends javax.swing.JFrame{
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -252,7 +277,8 @@ public class FCFSJFrame extends javax.swing.JFrame{
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(canvasPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -275,7 +301,8 @@ public class FCFSJFrame extends javax.swing.JFrame{
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(canvasPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -298,6 +325,10 @@ public class FCFSJFrame extends javax.swing.JFrame{
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         System.out.println(procesador.setBloquearProceso());
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void canvasPanelComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_canvasPanelComponentResized
+        diagrama.setBounds(0,0,canvasPanel.getWidth(),canvasPanel.getWidth());
+    }//GEN-LAST:event_canvasPanelComponentResized
 
     public void setjLabelTiempoEjecucion(JLabel jLabelTiempoEjecucion) {
         this.jLabelTiempoEjecucion = jLabelTiempoEjecucion;
@@ -324,7 +355,6 @@ public class FCFSJFrame extends javax.swing.JFrame{
         return jTableFinalizados;
     }
 
-    
    
     
 
@@ -332,6 +362,7 @@ public class FCFSJFrame extends javax.swing.JFrame{
     private javax.swing.JTextField JtextNombre;
     private javax.swing.JTextField JtextRafaga;
     private javax.swing.JTextField JtextTLlegada;
+    private javax.swing.JPanel canvasPanel;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
@@ -344,7 +375,6 @@ public class FCFSJFrame extends javax.swing.JFrame{
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabelTiempoEjecucion;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanelSemasforo;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
