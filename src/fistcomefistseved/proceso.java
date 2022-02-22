@@ -4,6 +4,8 @@
  */
 package fistcomefistseved;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author felipe
@@ -22,6 +24,7 @@ public class proceso {
     private float bloqueadoV;
     private float tiempo_bloqueo;
     private boolean bloqueo;
+    private ArrayList <String>lista_estados;
     
     public proceso(String nombre, float tiempo_llegada, float rafaga){
         this.nombre = nombre;
@@ -32,6 +35,7 @@ public class proceso {
         this.bloqueadoV = 0;
         this.rafagaV = rafaga;
         this.bloqueo = false;
+        this.lista_estados = new ArrayList<String>();
     }
 
     public float getRafagaV() {
@@ -44,6 +48,14 @@ public class proceso {
 
     public void setBloqueadoV(float bloqueadoV) {
         this.bloqueadoV = this.bloqueadoV+bloqueadoV;
+    }
+
+    public ArrayList getLista_estados() {
+        return lista_estados;
+    }
+
+    public void setLista_estados(ArrayList lista_estados) {
+        this.lista_estados = lista_estados;
     }
 
     

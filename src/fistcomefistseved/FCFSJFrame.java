@@ -14,11 +14,13 @@ import javax.swing.JTable;
  *
  * @author felipe
  */
-public class FCFSJFrame extends javax.swing.JFrame implements Runnable{
+public class FCFSJFrame extends javax.swing.JFrame implements Runnable {
+
     private procesador procesador;
     private conexion conexionProcesadorVentana;
     private Thread hilo_dibujo;
     DiagramaGantt diagrama;
+
     /**
      * Creates new form FCFSJFrame
      */
@@ -34,17 +36,18 @@ public class FCFSJFrame extends javax.swing.JFrame implements Runnable{
         procesador.start();
         hilo_dibujo.start();
         diagrama();
-        
+
     }
-    private void diagrama(){
+
+    private void diagrama() {
         diagrama = new DiagramaGantt(this.procesador);
-        diagrama.setBounds(0,0,canvasPanel.getWidth(),canvasPanel.getWidth());
+        diagrama.setBounds(0, 0, canvasPanel.getWidth(), canvasPanel.getWidth());
         this.canvasPanel.add(diagrama);
         //this.canvasPanel.setPreferredSize(new Dimension(1000,1000));
     }
-    
-    public void run(){
-        while(true){
+
+    public void run() {
+        while (true) {
             try {
                 diagrama.repaint();
                 this.hilo_dibujo.sleep(60);
@@ -52,7 +55,7 @@ public class FCFSJFrame extends javax.swing.JFrame implements Runnable{
             }
         }
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -75,7 +78,7 @@ public class FCFSJFrame extends javax.swing.JFrame implements Runnable{
         jLabel5 = new javax.swing.JLabel();
         jLabelTiempoEjecucion = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTableCola = new javax.swing.JTable();
+        jTableEjecucion = new javax.swing.JTable();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTableFinalizados = new javax.swing.JTable();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -85,6 +88,9 @@ public class FCFSJFrame extends javax.swing.JFrame implements Runnable{
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        jTableEspera = new javax.swing.JTable();
+        jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(254, 254, 254));
@@ -154,7 +160,7 @@ public class FCFSJFrame extends javax.swing.JFrame implements Runnable{
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(jPanelSemasforo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabelTiempoEjecucion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -183,9 +189,9 @@ public class FCFSJFrame extends javax.swing.JFrame implements Runnable{
                 .addContainerGap())
         );
 
-        jTableCola.setBackground(new java.awt.Color(97, 97, 97));
-        jTableCola.setFont(new java.awt.Font("Noto Sans", 1, 18)); // NOI18N
-        jTableCola.setModel(new javax.swing.table.DefaultTableModel(
+        jTableEjecucion.setBackground(new java.awt.Color(97, 97, 97));
+        jTableEjecucion.setFont(new java.awt.Font("Noto Sans", 1, 18)); // NOI18N
+        jTableEjecucion.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -196,7 +202,7 @@ public class FCFSJFrame extends javax.swing.JFrame implements Runnable{
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTableCola);
+        jScrollPane1.setViewportView(jTableEjecucion);
 
         jTableFinalizados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -239,10 +245,10 @@ public class FCFSJFrame extends javax.swing.JFrame implements Runnable{
         );
         canvasPanelLayout.setVerticalGroup(
             canvasPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 230, Short.MAX_VALUE)
+            .addGap(0, 219, Short.MAX_VALUE)
         );
 
-        jLabel6.setText("COLA:");
+        jLabel6.setText("EJECUCION:");
 
         jLabel8.setText("FINALIZADOS:");
 
@@ -256,30 +262,48 @@ public class FCFSJFrame extends javax.swing.JFrame implements Runnable{
             }
         });
 
+        jTableEspera.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane5.setViewportView(jTableEspera);
+
+        jLabel7.setText("COLA:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane5)
+                            .addComponent(canvasPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 679, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addContainerGap())
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(jScrollPane3)
-                    .addComponent(jScrollPane1)
-                    .addComponent(jScrollPane4)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel8)
-                            .addComponent(jLabel9))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(canvasPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel7))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -287,11 +311,18 @@ public class FCFSJFrame extends javax.swing.JFrame implements Runnable{
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel6)
-                    .addComponent(jButton2))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addGap(23, 23, 23)))
+                .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -309,13 +340,16 @@ public class FCFSJFrame extends javax.swing.JFrame implements Runnable{
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if(!procesador.setProceso(new proceso(
-        String.valueOf(this.JtextNombre.getText()),
-                Float.parseFloat(this.JtextTLlegada.getText()),
-                Float.parseFloat(this.JtextRafaga.getText())
-        ))){
-            JOptionPane.showMessageDialog(this, "Error en tiempo de llegada, tiene que ser mayor o igual a: "+ procesador.getTiempo_llegada_ultimo_proceso());
-        }
+       
+            if (!procesador.setProceso(new proceso(
+                    String.valueOf(this.JtextNombre.getText()),
+                    Float.parseFloat(this.JtextTLlegada.getText()),
+                    Float.parseFloat(this.JtextRafaga.getText())
+            ))) {
+                JOptionPane.showMessageDialog(this, "Error en tiempo de llegada, tiene que ser mayor o igual a: " + procesador.getTiempo_llegada_ultimo_proceso());
+            }
+       
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void JtextNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JtextNombreActionPerformed
@@ -327,7 +361,7 @@ public class FCFSJFrame extends javax.swing.JFrame implements Runnable{
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void canvasPanelComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_canvasPanelComponentResized
-        diagrama.setBounds(0,0,canvasPanel.getWidth(),canvasPanel.getWidth());
+        diagrama.setBounds(0, 0, canvasPanel.getWidth(), canvasPanel.getWidth());
     }//GEN-LAST:event_canvasPanelComponentResized
 
     public void setjLabelTiempoEjecucion(JLabel jLabelTiempoEjecucion) {
@@ -337,14 +371,13 @@ public class FCFSJFrame extends javax.swing.JFrame implements Runnable{
     public JLabel getjLabelTiempoEjecucion() {
         return jLabelTiempoEjecucion;
     }
-    
 
     public JPanel getjPanelSemasforo() {
         return jPanelSemasforo;
     }
 
     public JTable getjTableCola() {
-        return jTableCola;
+        return jTableEjecucion;
     }
 
     public JTable getjTableBloqueo() {
@@ -354,9 +387,15 @@ public class FCFSJFrame extends javax.swing.JFrame implements Runnable{
     public JTable getjTableFinalizados() {
         return jTableFinalizados;
     }
-
-   
     
+     public JTable getjTableEspera() {
+        return jTableEspera;
+    }
+
+    public void setjTableEspera(JTable jTableEspera) {
+        this.jTableEspera = jTableEspera;
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField JtextNombre;
@@ -371,6 +410,7 @@ public class FCFSJFrame extends javax.swing.JFrame implements Runnable{
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabelTiempoEjecucion;
@@ -379,8 +419,10 @@ public class FCFSJFrame extends javax.swing.JFrame implements Runnable{
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTable jTableBloqueo;
-    private javax.swing.JTable jTableCola;
+    private javax.swing.JTable jTableEjecucion;
+    private javax.swing.JTable jTableEspera;
     private javax.swing.JTable jTableFinalizados;
     // End of variables declaration//GEN-END:variables
 

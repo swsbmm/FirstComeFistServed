@@ -40,7 +40,7 @@ public class conexion extends Thread{
 
     }
 
-    private void tablaCola() {
+    private void tablaEjecucion() {
         try {
             ArrayList<Object[]> datos = new ArrayList<Object[]>();
             DefaultTableModel modelo_final = new DefaultTableModel();
@@ -57,6 +57,24 @@ public class conexion extends Thread{
         }
 
     }
+    
+    private void tablaCola() {
+        try {
+            ArrayList<Object[]> datos = new ArrayList<Object[]>();
+            DefaultTableModel modelo_final = new DefaultTableModel();
+            procesosEnColaTable(modelo_final);
+            for (proceso p : p.getCola_espera()) {
+                datos.add(new Object[]{String.valueOf(p.getNombre()), String.valueOf(p.getTiempo_llegada()), String.valueOf(p.getRafaga())});
+            }
+
+            for (Object[] dato : datos) {
+                modelo_final.addRow(dato);
+            }
+            ventana.getjTableEspera().setModel(modelo_final);
+        } catch (Exception e) {
+        }
+
+    }
 
     private void tituloColaTerminado(DefaultTableModel modelo) {
         ArrayList<Object> titulo1 = new ArrayList<Object>();
@@ -68,6 +86,7 @@ public class conexion extends Thread{
         titulo1.add("Tiempo de retorno");
         titulo1.add("Tiempo de espera");
         titulo1.add("Tiempo bloqueado");
+        titulo1.add("vector de pintado:");
         for (Object col1 : titulo1) {
             modelo.addColumn(col1);
         }
@@ -114,6 +133,10 @@ public class conexion extends Thread{
             DefaultTableModel modelo_final1 = new DefaultTableModel();
             tituloColaTerminado(modelo_final1);
             for (proceso p : p.getCola_terminado()) {
+                String lista="";
+                for(int i=0; i<p.getLista_estados().size();i++){
+                    lista = lista + "-" + p.getLista_estados().get(i);
+                }
                 datos.add(new Object[]{
                     String.valueOf(p.getNombre()),
                     String.valueOf(p.getTiempo_llegada()),
@@ -122,7 +145,9 @@ public class conexion extends Thread{
                     String.valueOf(p.getTiempo_final()),
                     String.valueOf(p.getTiempo_retorno()),
                     String.valueOf(p.getTiempo_espera()),
-                    String.valueOf(p.getBloqueadoV())});
+                    String.valueOf(p.getBloqueadoV()),
+                    String.valueOf(lista)
+                });
             }
 
             for (Object[] dato : datos) {
@@ -158,8 +183,12 @@ public class conexion extends Thread{
                 this.sleep(120);
 
                 //tabla cola
-                tablaCola();
+                tablaEjecucion();
 
+                this.sleep(120);
+                
+                tablaCola();
+                
                 this.sleep(120);
                 
                 tablaColaTerminado();
