@@ -25,7 +25,6 @@ public class procesador extends Thread {
     private float tiempo_ejecucion;
     private boolean libre;
     private float tiempo_llegada_ultimo_proceso;
-    private boolean bloqueo;
 
     public procesador() {
         this.cola_espera = new LinkedList();
@@ -36,13 +35,18 @@ public class procesador extends Thread {
         this.libre = true;
         this.tiempo_llegada_ultimo_proceso = 0;
         this.procesos = new ArrayList<proceso>();
-        this.bloqueo = false;
     }
 
     public Queue<proceso> getCola_espera() {
         return cola_espera;
     }
 
+    public Queue<proceso> getCola_ejecucion() {
+        return cola_ejecucion;
+    }
+
+    
+    
     public boolean isLibre() {
         return libre;
     }
@@ -71,22 +75,7 @@ public class procesador extends Thread {
         return tiempo_llegada_ultimo_proceso;
     }
 
-    public boolean setBloquearProceso() {
-        if (!this.cola_ejecucion.isEmpty()) {
-            if (this.cola_ejecucion.peek().getRafaga() > 0) {
-                this.cola_ejecucion.peek().setBloqueo(true);
-                float numRan = numeroRadom();
-                this.cola_ejecucion.peek().setTiempo_bloqueo(numRan);
-                this.cola_ejecucion.peek().setBloqueadoV(numRan);
-                this.bloqueo = true;
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
+    
 
     public boolean setProceso(proceso p) {
         if (p.getTiempo_llegada() >= this.tiempo_llegada_ultimo_proceso) {
@@ -136,38 +125,7 @@ public class procesador extends Thread {
         }
     }
 
-    private boolean procesos_bloqueados() {
-        if (!this.cola_ejecucion.isEmpty()) {
-            for (proceso p : this.cola_ejecucion) {
-                if (p.isBloqueo()) {
-                    this.cola_bloqueo.add(this.cola_ejecucion.poll());
-                    return true;
-                }
-            }
-        }
-        if (!this.cola_bloqueo.isEmpty()) {
-            for (proceso p : this.cola_bloqueo) {
-                if (p.getTiempo_bloqueo() > 0) {
-                    p.setTiempo_bloqueo(p.getTiempo_bloqueo() - 1);
-                    p.getLista_estados().add("5");
-                    //aumentar_tiempo(cola_espera, "5");
-                }
-                if (p.getTiempo_bloqueo() == 0) {
-                    p.setBloqueo(false);
-                    if (this.cola_ejecucion.isEmpty()) {
-                        this.cola_ejecucion.add(this.cola_bloqueo.poll());
-                        return true;
-                    } else {
-                        this.cola_espera.add(this.cola_bloqueo.poll());
-                        return true;
-                    }
-
-                }
-            }
-
-        }
-        return false;
-    }
+    
 
     private void procesos_en_ejecucion() {
         if (cola_ejecucion.peek() != null) {
@@ -196,11 +154,11 @@ public class procesador extends Thread {
     }
 
     private void tiempo_ejecucion_procesador() {
-        if (!this.isLibre()) {
+        
             if (!this.cola_ejecucion.isEmpty() || !this.cola_bloqueo.isEmpty() || !this.cola_espera.isEmpty()) {
                 this.tiempo_ejecucion = this.tiempo_ejecucion + 1;
             }
-        }
+        
 
     }
 
@@ -224,13 +182,12 @@ public class procesador extends Thread {
     @Override
     public void run() {
         while (true) {
-            System.out.println("EJECUTANDO" + Timer.ONE_SECOND);
             try {
                 procesos_en_espera();
-                procesos_bloqueados();
                 procesos_en_ejecucion();
-                this.sleep(1000);
                 tiempo_ejecucion_procesador();
+                this.sleep(1000);
+                
 
             } catch (Exception e) {
             }

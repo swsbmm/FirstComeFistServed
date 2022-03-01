@@ -61,7 +61,7 @@ public class DiagramaGantt extends Canvas {
 
     }
 
-    public void dibujarProcesoEE(Graphics2D pincel) {
+    public void dibujarProcesoEnEjecucion(Graphics2D pincel) {
         int altura = 70;
         int separacion = 50;
         pincel.setPaint(Color.white);
@@ -78,14 +78,48 @@ public class DiagramaGantt extends Canvas {
 
     }
 
-    public void dibujarBarras1(Graphics2D pincel) {
+    public void dibujarColaTerminado(Graphics2D pincel) {
         int altura_inicial = 100;
-        int altura_inicial1 = 100;
         int separacion = 50;
         pincel.setPaint(Color.red);
         if (!procesador.getCola_terminado().isEmpty()) {
             //TIEMPO DE EJECICION y TIEMPO BLOQUEADO
             for (proceso p : procesador.getCola_terminado()) {
+                pincel.drawString(p.getNombre(), 20, altura_inicial + 15);
+                int xx = (int) ((separacion + p.getTiempo_llegada() * unidad));
+                for (int x = 0; x < p.getLista_estados().size(); x++) {
+                    //System.out.println("LONGITUD: "+ p.getLista_estados().size());
+                    if (p.getLista_estados().get(x) == "2") {
+                        pincel.setPaint(Color.blue);
+                    } else if(p.getLista_estados().get(x) == "5") {
+                        pincel.setPaint(Color.red);
+                    } else if(p.getLista_estados().get(x) == "7"){
+                        pincel.setPaint(Color.cyan);
+                    }else if(p.getLista_estados().get(x) == "1"){
+                        pincel.setPaint(Color.YELLOW);
+                    }
+                    pincel.fill(new Rectangle2D.Double(
+                            xx,
+                            altura_inicial,
+                            unidad,
+                            15
+                    ));
+                    xx = (int) (xx + unidad);
+                }
+                pincel.setPaint(Color.red);
+                altura_inicial = altura_inicial + salto_de_linea;
+            }
+        }
+    }
+    
+    public void dibujarProcesoUpdate(Graphics2D pincel) {
+        int altura_inicial = 50;
+        int altura_inicial1 = 100;
+        int separacion = 50;
+        pincel.setPaint(Color.red);
+        if (!procesador.getCola_ejecucion().isEmpty()) {
+            //TIEMPO DE EJECICION y TIEMPO BLOQUEADO
+            for (proceso p : procesador.getCola_ejecucion()) {
                 pincel.drawString(p.getNombre(), 20, altura_inicial + 15);
                 int xx = (int) ((separacion + p.getTiempo_llegada() * unidad));
                 for (int x = 0; x < p.getLista_estados().size(); x++) {
@@ -134,8 +168,10 @@ public class DiagramaGantt extends Canvas {
         draw.setStroke(new BasicStroke(ancho_pincel));
         draw.setColor(color);
         dibujarLinea(draw);
-        dibujarProcesoEE(draw);
-        dibujarBarras1(draw);
+        
+        dibujarProcesoUpdate(draw);
+        //dibujarProcesoEnEjecucion(draw);
+        dibujarColaTerminado(draw);
         draw.draw(this.shape);
         g.drawImage(dobleBuffer, 0, 0, this);
     }

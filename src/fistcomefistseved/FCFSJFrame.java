@@ -357,7 +357,7 @@ public class FCFSJFrame extends javax.swing.JFrame implements Runnable {
     }//GEN-LAST:event_JtextNombreActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        System.out.println(procesador.setBloquearProceso());
+        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void canvasPanelComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_canvasPanelComponentResized
